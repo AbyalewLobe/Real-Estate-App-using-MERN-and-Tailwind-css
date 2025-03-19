@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useRef } from "react";
-import { account, storage } from "../appWrite/appwriteConfig";
+import { storage } from "../appWrite/appwriteConfig";
 import { Await } from "react-router-dom";
 import {
   updateUserFailure,
   updateUserStart,
   updateUserSucess,
+  deletUserFailure,
+  deletUserSucess,
+  deleteUserStart,
 } from "../redux/user/userSlice";
 import { useDispatch } from "react-redux";
 export default function Profile() {
@@ -58,19 +61,15 @@ export default function Profile() {
 
       console.log(imageUrl);
       setFormData({ ...formData, avatar: imageUrl });
+      console.log(imageUrl);
     } catch (error) {
       console.error("Upload failed:", error);
       setIsUplodeE(true);
     }
   };
   const handleChange = (e) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.id]: e.target.value,
-      avatar: prev.avatar || currentUser.avatar, // Preserve existing avatar
-    }));
+    setFormData({ ...formData, [e.target.id]: e.target.value });
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -85,6 +84,7 @@ export default function Profile() {
       const data = await res.json();
       if (data.success === false) {
         dispatch(updateUserFailure(data.message));
+        return;
       }
       dispatch(updateUserSucess(data));
       setUpdateSuccess(true);
@@ -92,13 +92,28 @@ export default function Profile() {
       dispatch(updateUserFailure(error.message));
     }
   };
+
+  const handleDeleteUser = async () => {
+    try {
+      dispatch(deleteUserStart());
+      const res = await fetch(`/api/user/delete/${currentUser._id}`, {
+        method: "DELETE",
+      });
+      const data = res.json();
+      if (data.success === false) {
+        dispatch(deletUserFailure(data.message));
+        return;
+      }
+      dispatch(deletUserSucess(data));
+    } catch (error) {
+      dispatch(deletUserFailure(error.message));
+    }
+  };
+  console.log("ccccuewf", currentUser);
   return (
     <div className="max-w-lg mx-auto p-3">
       <h1 className="text-3xl font-semibold my-7 text-center">Profile</h1>
-      <form
-        className="flex flex-col gap-4"
-        onSubmit={(handleFileUpload, handleSubmit)}
-      >
+      <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
         <input
           onChange={handleFileChange}
           type="file"
@@ -154,7 +169,12 @@ export default function Profile() {
         </button>
       </form>
       <div className="flex justify-between mt-5">
-        <span className="text-red-700 cursor-pointer">Delete account</span>
+        <span
+          onClick={handleDeleteUser}
+          className="text-red-700 cursor-pointer"
+        >
+          Delete account
+        </span>
         <span className="text-red-700 cursor-pointer">Sign Out</span>
       </div>
       <p className="text-red-700 mt-5">{error ? error : ""}</p>
