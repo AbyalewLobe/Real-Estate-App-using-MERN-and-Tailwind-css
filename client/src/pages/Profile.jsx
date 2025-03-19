@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useRef } from "react";
 import { storage } from "../appWrite/appwriteConfig";
-import { Await } from "react-router-dom";
+import { Await, data } from "react-router-dom";
 import {
   updateUserFailure,
   updateUserStart,
@@ -10,6 +10,9 @@ import {
   deletUserFailure,
   deletUserSucess,
   deleteUserStart,
+  signOutFailure,
+  signOutStart,
+  signOutSucess,
 } from "../redux/user/userSlice";
 import { useDispatch } from "react-redux";
 export default function Profile() {
@@ -109,7 +112,19 @@ export default function Profile() {
       dispatch(deletUserFailure(error.message));
     }
   };
-  console.log("ccccuewf", currentUser);
+  const handleSignOut = async () => {
+    try {
+      dispatch(signOutStart());
+      const res = await fetch("/api/auth/signout");
+      if (data.success === false) {
+        dispatch(signOutFailure(data.message));
+        return;
+      }
+      dispatch(signOutSucess(data));
+    } catch (error) {
+      dispatch(signOutFailure(data.message));
+    }
+  };
   return (
     <div className="max-w-lg mx-auto p-3">
       <h1 className="text-3xl font-semibold my-7 text-center">Profile</h1>
@@ -175,7 +190,9 @@ export default function Profile() {
         >
           Delete account
         </span>
-        <span className="text-red-700 cursor-pointer">Sign Out</span>
+        <span onClick={handleSignOut} className="text-red-700 cursor-pointer">
+          Sign Out
+        </span>
       </div>
       <p className="text-red-700 mt-5">{error ? error : ""}</p>
       <p className="text-green-700 mt-5">
