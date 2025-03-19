@@ -64,8 +64,13 @@ export default function Profile() {
     }
   };
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.id]: e.target.value });
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.id]: e.target.value,
+      avatar: prev.avatar || currentUser.avatar, // Preserve existing avatar
+    }));
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
