@@ -1,6 +1,66 @@
-import React from "react";
-
+import React, { useState } from "react";
+import { storage } from "../appWrite/appwriteConfig";
 export default function CreateListing() {
+  const [files, setFile] = useState([]);
+  const [uploading, setUploading] = useState(false);
+
+  const [imageUploadError, setImageUploadError] = useState(null);
+  const [formData, setFormData] = useState({
+    imageUrls: [],
+  });
+  console.log(formData);
+  const handleImageSubmit = async (e) => {
+    e.preventDefault();
+    setUploading(true);
+    setImageUploadError(false);
+    if (files.length > 0 && files.length + formData.imageUrls.length <= 6) {
+      const promises = Array.from(files).map((file) => storeImage(file));
+
+      try {
+        const imageUrl = await Promise.all(promises);
+        setFormData({ ...formData, imageUrls: imageUrl });
+        console.log("All images uploaded successfully:", imageUrl);
+        console.log(formData);
+
+        setImageUploadError(false);
+        setUploading(false);
+      } catch (error) {
+        console.error("Error uploading images:", error);
+        setImageUploadError("Image upload failed,(2 MB) MAX per image ");
+        setUploading(false);
+      }
+    } else {
+      console.error("Please upload between 1 and 6 images.");
+      setImageUploadError(
+        "You can upload a minimum of 1 and a maximum of 6 images"
+      );
+      setUploading(false);
+    }
+  };
+
+  const storeImage = async (file) => {
+    console.log("File to upload:", file);
+    try {
+      const fileId = `unique-${Date.now()}`;
+      const response = await storage.createFile(
+        "67d6b927001599b4e502",
+        fileId,
+        file
+      );
+      console.log("Response from Appwrite:", response);
+
+      const imageUrl = await storage.getFilePreview(
+        "67d6b927001599b4e502",
+        response.$id
+      );
+      console.log("Image URL:", imageUrl);
+      return imageUrl.href;
+    } catch (error) {
+      console.error("Error storing image:", error);
+      throw error;
+    }
+  };
+
   return (
     <main className="p-3 max-w-4xl mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">
@@ -111,19 +171,25 @@ export default function CreateListing() {
           </p>
           <div className="flex gap-4">
             <input
+              onChange={(e) => setFile(e.target.files)}
               className="p-3 border border-gray-300 rounded w-full"
               type="file"
               id="images"
               accept="image/*"
               multiple
             />
-            <button className="p-3 text-green-700 border border-green-700 rounded uppercase hover:shadow-lg disabled:opacity-80 ">
-              Upload
+            <button
+              disabled={uploading}
+              type="button"
+              onClick={handleImageSubmit}
+              className="p-3 text-green-700 border border-green-700 rounded uppercase hover:shadow-lg disabled:opacity-80"
+            >
+              {uploading ? "Uploading....." : "Upload"}
             </button>
           </div>
-          <butto className="bg-slate-700 p-3 text-white rounded-lg uppercase hover:opacity-95 disabled:opacity-80">
+          <button className="bg-slate-700 p-3 text-white rounded-lg uppercase hover:opacity-95 disabled:opacity-80">
             Create Listing
-          </butto>
+          </button>
         </div>
       </form>
     </main>
