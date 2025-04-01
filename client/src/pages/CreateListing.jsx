@@ -17,9 +17,12 @@ export default function CreateListing() {
       const promises = Array.from(files).map((file) => storeImage(file));
 
       try {
-        const imageUrl = await Promise.all(promises);
-        setFormData({ ...formData, imageUrls: imageUrl });
-        console.log("All images uploaded successfully:", imageUrl);
+        const newImageUrl = await Promise.all(promises);
+        setFormData((prevFormData) => ({
+          ...prevFormData,
+          imageUrls: [...prevFormData.imageUrls, ...newImageUrl],
+        }));
+        console.log("All images uploaded successfully:", newImageUrl);
         console.log(formData);
 
         setImageUploadError(false);
@@ -54,13 +57,19 @@ export default function CreateListing() {
         response.$id
       );
       console.log("Image URL:", imageUrl);
-      return imageUrl.href;
+      return imageUrl;
     } catch (error) {
       console.error("Error storing image:", error);
       throw error;
     }
   };
 
+  const handleRemoveImage = (index) => {
+    setFormData({
+      ...formData,
+      imageUrls: formData.imageUrls.filter((_, i) => i !== index),
+    });
+  };
   return (
     <main className="p-3 max-w-4xl mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">
@@ -187,6 +196,27 @@ export default function CreateListing() {
               {uploading ? "Uploading....." : "Upload"}
             </button>
           </div>
+          <p className="text-red-700">{imageUploadError && imageUploadError}</p>
+          {formData.imageUrls.length > 0 &&
+            formData.imageUrls.map((url, index) => (
+              <div
+                key={url}
+                className="flex justify-between p-3 border items-center"
+              >
+                <img
+                  src={url}
+                  alt="listing image"
+                  className="w-20 h-20 object-contain rounded-lg"
+                />
+                <button
+                  type="button"
+                  onClick={() => handleRemoveImage(index)}
+                  className="p-3 text-red-700 rounded-lg uppercase hover:opacity-75 "
+                >
+                  Delete
+                </button>
+              </div>
+            ))}
           <button className="bg-slate-700 p-3 text-white rounded-lg uppercase hover:opacity-95 disabled:opacity-80">
             Create Listing
           </button>
