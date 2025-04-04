@@ -68,7 +68,7 @@ export default function CreateListing() {
       );
       console.log("Response from Appwrite:", response);
 
-      const imageUrl = await storage.getFilePreview(
+      const imageUrl = await storage.getFileView(
         "67d6b927001599b4e502",
         response.$id
       );
