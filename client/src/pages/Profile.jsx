@@ -16,6 +16,7 @@ import {
   signOutSucess,
 } from "../redux/user/userSlice";
 import { useDispatch } from "react-redux";
+import Listing from "../../../api/models/listing.model";
 export default function Profile() {
   const fileRef = useRef(null);
   const { currentUser, loading, error } = useSelector((state) => state.user);
@@ -24,6 +25,8 @@ export default function Profile() {
   const [formData, setFormData] = useState({});
   const [isUpplodeE, setIsUplodeE] = useState(false);
   const [updateSuccess, setUpdateSuccess] = useState(false);
+  const [showListingError, setShowListingError] = useState(false);
+  const [userListings, setUserListings] = useState([]);
   const dispatch = useDispatch();
   console.log(file);
   console.log(formData);
@@ -126,6 +129,21 @@ export default function Profile() {
       dispatch(signOutFailure(data.message));
     }
   };
+
+  const handleShowListing = async () => {
+    try {
+      setShowListingError(false);
+      const res = await fetch(`/api/user/listings/${currentUser._id}`);
+      const data = await res.json();
+      if (data.success === false) {
+        setShowListingError(true);
+        return;
+      }
+      setUserListings(data);
+    } catch (error) {
+      setShowListingError(true);
+    }
+  };
   return (
     <div className="max-w-lg mx-auto p-3">
       <h1 className="text-3xl font-semibold my-7 text-center">Profile</h1>
@@ -190,7 +208,7 @@ export default function Profile() {
           Create Listing
         </Link>
       </form>
-      <div className="flex justify-between mt-5">
+      <div className="flex justify-between mt-3">
         <span
           onClick={handleDeleteUser}
           className="text-red-700 cursor-pointer"
@@ -202,9 +220,47 @@ export default function Profile() {
         </span>
       </div>
       <p className="text-red-700 mt-5">{error ? error : ""}</p>
-      <p className="text-green-700 mt-5">
+      <p className="text-green-700 mt-3">
         {updateSuccess ? "User is Updated Successfully" : ""}
       </p>
+
+      <button onClick={handleShowListing} className="text-green-700 w-full">
+        Show Listings
+      </button>
+      <p className="text-red-700 mt-5">
+        {showListingError ? "Error showing listing" : ""}
+      </p>
+      {userListings && userListings.length > 0 && (
+        <div className="flex flex-col gap-4">
+          <h1 className="text-center my-7 text-2xl font-semibold ">
+            Your Listing
+          </h1>
+          {userListings.map((listing) => (
+            <div
+              key={listing._id}
+              className="border rounded-lg p-3 flex justify-between items-center gap-4"
+            >
+              <Link to={`/listing/${Listing._id}`}>
+                <img
+                  src={listing.imageUrls[0]}
+                  alt="listing cover"
+                  className="h-16 w-16 object-contain "
+                />
+              </Link>
+              <Link
+                className="flex-1 text-slate-700 font-semibold hover:underline truncate "
+                to={`/listing/${listing._id}`}
+              >
+                <p>{listing.name}</p>
+              </Link>
+              <div className="flex flex-col items-center">
+                <button className="text-red-700">Delete</button>
+                <button className="text-green-700">Edit</button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
