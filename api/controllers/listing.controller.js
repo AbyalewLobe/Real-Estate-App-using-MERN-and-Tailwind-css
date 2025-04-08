@@ -27,7 +27,7 @@ export const deleteListing = async (req, res, next) => {
 };
 
 export const updateListing = async (req, res, next) => {
-  const listing = await Listing.findByIdAndUpdate(req.params.id);
+  const listing = await Listing.findById(req.params.id);
   if (!listing) {
     return next(errorHanndle(404, "Listing not found"));
   }
@@ -43,5 +43,17 @@ export const updateListing = async (req, res, next) => {
     res.status(200).json(updateListing);
   } catch (error) {
     next(error.message);
+  }
+};
+
+export const getListing = async (req, res, next) => {
+  try {
+    const listing = await Listing.findById(req.params.id);
+    if (!listing) {
+      return next(errorHanndle(404, "Listing not found!"));
+    }
+    res.status(200).json(listing);
+  } catch (error) {
+    next(error);
   }
 };
