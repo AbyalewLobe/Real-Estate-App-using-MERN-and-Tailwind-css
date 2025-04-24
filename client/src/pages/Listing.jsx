@@ -4,6 +4,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore from "swiper";
 import { Navigation, Pagination } from "swiper/modules";
 import "swiper/css/bundle";
+import { useSelector } from "react-redux";
 import {
   FaBath,
   FaBed,
@@ -11,12 +12,15 @@ import {
   FaMapMarkerAlt,
   FaParking,
 } from "react-icons/fa";
+import Contact from "../components/Contact";
 export default function Listing() {
   SwiperCore.use([Navigation, Pagination]);
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const params = useParams();
+  const { currentUser } = useSelector((state) => state.user);
+  const [contact, setContact] = useState(false);
   useEffect(() => {
     const fechListing = async () => {
       try {
@@ -128,6 +132,15 @@ export default function Listing() {
             </span>
           </li>
         </ul>
+        {currentUser && listing?.userRef !== currentUser._id && !contact && (
+          <button
+            onClick={() => setContact(true)}
+            className="bg-[#2d3e50] text-white mt-8 w-full rounded-md py-3 text-lg font-semibold hover:bg-[#1c2c3a] transition"
+          >
+            CONTACT LANDLORD
+          </button>
+        )}
+        {contact && <Contact listing={listing} />}
       </div>
     </main>
   );
