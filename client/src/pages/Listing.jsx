@@ -5,6 +5,7 @@ import SwiperCore from "swiper";
 import { Navigation, Pagination } from "swiper/modules";
 import "swiper/css/bundle";
 import { useSelector } from "react-redux";
+import { FaShareAlt } from "react-icons/fa";
 import {
   FaBath,
   FaBed,
@@ -58,7 +59,7 @@ export default function Listing() {
             className="rounded-lg overflow-hidden shadow-lg"
           >
             {listing.imageUrls.map((url) => (
-              <SwiperSlide key={url}>
+              <SwiperSlide key={url} className="relative">
                 <div
                   className="h-[450px]"
                   style={{
@@ -66,6 +67,17 @@ export default function Listing() {
                     backgroundSize: "cover",
                   }}
                 ></div>
+
+                {/* Share icon in the top-right */}
+                <button
+                  className="absolute top-4 right-4 bg-white p-2 rounded-full shadow hover:bg-gray-100 transition"
+                  onClick={() =>
+                    navigator.clipboard.writeText(window.location.href)
+                  }
+                  title="Share listing"
+                >
+                  <FaShareAlt className="text-gray-600" />
+                </button>
               </SwiperSlide>
             ))}
           </Swiper>
