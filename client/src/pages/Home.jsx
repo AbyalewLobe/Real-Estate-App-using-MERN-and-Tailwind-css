@@ -8,6 +8,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import CardItems from "../components/CardItems";
+
 export default function Home() {
   const [offerListings, setOfferListings] = useState([]);
   const [saleListings, setSaleListings] = useState([]);
@@ -72,18 +73,23 @@ export default function Home() {
       </div>
 
       {/* swiper */}
-      <Swiper navigation>
+      <Swiper
+        navigation
+        spaceBetween={20} // Space between slides
+        centeredSlides={true} // Center the active slide
+        loop={true} // Enable looping (optional)
+        // Center Swiper container
+      >
         {offerListings &&
           offerListings.length > 0 &&
           offerListings.map((listing) => (
-            <SwiperSlide>
+            <SwiperSlide key={listing._id}>
               <div
                 style={{
                   background: `url(${listing.imageUrls[0]}) center no-repeat`,
                   backgroundSize: "cover",
                 }}
-                className="h-[350px]"
-                key={listing._id}
+                className="h-[500px] rounded-lg shadow-lg transform transition-all hover:scale-105"
               ></div>
             </SwiperSlide>
           ))}
