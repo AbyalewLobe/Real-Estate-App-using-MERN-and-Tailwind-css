@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import CardItems from "../components/CardItems";
 export default function Search() {
   const [sidebardata, setsidebardata] = useState({
     searchTerm: "",
@@ -40,7 +41,6 @@ export default function Search() {
       setsidebardata({ ...sidebardata, sort, order });
     }
   };
-  console.log(sidebardata);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -209,10 +209,25 @@ export default function Search() {
         </form>
       </div>
 
-      <div className="p-7  flex flex-col gap-5 md:w-full ">
+      <div className="flex-1 p-7">
         <h1 className="text-2xl font-semibold text-slate-500  mt-5">
           Search results:
         </h1>
+        <div className="p-7  flex flex-wrap gap-4 ">
+          {!loading && listings.length === 0 && (
+            <p className="text-xl text-slate-700">No listing found!</p>
+          )}
+          {loading && (
+            <p className="text-xl text-slate-700 text-center w-full">
+              Loading......
+            </p>
+          )}
+          {!loading &&
+            listings &&
+            listings.map((listing) => (
+              <CardItems key={listing._id} listing={listing} />
+            ))}
+        </div>
       </div>
     </div>
   );
