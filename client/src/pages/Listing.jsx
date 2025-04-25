@@ -111,19 +111,25 @@ export default function Listing() {
         <ul className="mt-6 flex  text-green-700 font-semibold text-sm flex-wrap gap-6">
           <li className="flex items-center gap-2">
             <FaBed className="text-lg" />
-            {listing?.bedrooms > 1
-              ? `${listing?.bedrooms} Beds`
-              : `${listing?.bedrooms} Bed`}
+            <span className="bg-[#cce5e0] px-2 py-1 rounded">
+              {listing?.bedrooms > 1
+                ? `${listing?.bedrooms} Beds`
+                : `${listing?.bedrooms} Bed`}
+            </span>
           </li>
           <li className="flex items-center gap-2">
             <FaBath className="text-lg" />
-            {listing?.bathrooms > 1
-              ? `${listing?.bathrooms} Bathrooms`
-              : `${listing?.bathrooms} Bathroom`}
+            <span className="bg-[#cce5e0] px-2 py-1 rounded">
+              {listing?.bathrooms > 1
+                ? `${listing?.bathrooms} Bathrooms`
+                : `${listing?.bathrooms} Bathroom`}
+            </span>
           </li>
           <li className="flex items-center gap-2">
             <FaParking className="text-lg" />
-            {listing?.parking ? "Parking" : "No Parking"}
+            <span className="bg-[#cce5e0] px-2 py-1 rounded">
+              {listing?.parking ? "Parking" : "No Parking"}
+            </span>
           </li>
           <li className="flex items-center gap-2">
             <FaChair className="text-lg" />

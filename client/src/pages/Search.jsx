@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { data, useNavigate } from "react-router-dom";
 import CardItems from "../components/CardItems";
 export default function Search() {
   const [sidebardata, setsidebardata] = useState({
@@ -57,7 +57,7 @@ export default function Search() {
   };
   const [loading, setLoading] = useState(false);
   const [listings, setListings] = useState([]);
-
+  const [showMore, setShowMore] = useState(false);
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
     const searchTermFormUrl = urlParams.get("searchTerm");
@@ -89,11 +89,15 @@ export default function Search() {
 
       const fetchListings = async () => {
         setLoading(true);
-
+        setShowMore(false);
         const searchQuery = urlParams.toString();
         const res = await fetch(`/api/listing/get?${searchQuery}`);
         const data = await res.json();
-
+        if (data.length > 8) {
+          setShowMore(true);
+        } else {
+          setShowMore(false);
+        }
         setListings(data);
         setLoading(false);
       };
@@ -101,7 +105,19 @@ export default function Search() {
     }
   }, [location.search]);
 
-  console.log(listings);
+  const onShowMoreClick = async () => {
+    const numberOfListing = listings.length;
+    const startIndex = numberOfListing;
+    const urlParams = new URLSearchParams(location.search);
+    urlParams.set("startIndex", startIndex);
+    const searchQuery = urlParams.toString();
+    const res = await fetch(`/api/listing/get?${searchQuery}`);
+    const data = await res.json();
+    if (data.length < 9) {
+      setShowMore(false);
+    }
+    setListings([...listings, ...data]);
+  };
   return (
     <div className="flex flex-col md:flex-row">
       <div className="p-8 border-b-2 md:border-r-2 md:min-h-screen">
@@ -227,6 +243,14 @@ export default function Search() {
             listings.map((listing) => (
               <CardItems key={listing._id} listing={listing} />
             ))}
+          {showMore && (
+            <button
+              className="text-green-700 hover:underline p-7 text-center w-full"
+              onClick={onShowMoreClick}
+            >
+              Show more
+            </button>
+          )}
         </div>
       </div>
     </div>
