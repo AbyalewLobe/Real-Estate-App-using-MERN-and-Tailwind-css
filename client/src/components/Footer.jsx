@@ -5,7 +5,6 @@ export default function Footer() {
     <footer className="bg-gray-800 text-white py-10">
       <div className="max-w-screen-xl mx-auto px-6">
         <div className="grid md:grid-cols-3 gap-8">
-          {/* Logo and Description */}
           <div>
             <h3 className="text-2xl font-semibold text-green-500 mb-4">
               Abyalew Estate
@@ -43,7 +42,6 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Quick Links */}
           <div>
             <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
             <ul className="space-y-2">
@@ -60,7 +58,6 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Contact Information */}
           <div>
             <h4 className="text-lg font-semibold mb-4">Contact Us</h4>
             <p className="text-gray-400 mb-4">
@@ -76,7 +73,6 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Footer Bottom */}
         <div className="mt-8 border-t border-gray-700 pt-4 text-center">
           <p className="text-gray-400 text-sm">
             &copy; 2025 Abyalew Estate. All rights reserved.

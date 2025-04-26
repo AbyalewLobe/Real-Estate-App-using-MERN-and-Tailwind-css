@@ -68,7 +68,6 @@ export default function Listing() {
                   }}
                 ></div>
 
-                {/* Share icon in the top-right */}
                 <button
                   className="absolute top-4 right-4 bg-white p-2 rounded-full shadow hover:bg-gray-100 transition"
                   onClick={() =>

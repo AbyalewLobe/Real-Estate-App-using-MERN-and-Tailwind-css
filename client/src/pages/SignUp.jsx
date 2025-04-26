@@ -29,7 +29,6 @@ export default function SignUp() {
         setLoading(false);
         setError(data.message);
         return;
-        // console.log(data);
       }
       setLoading(false);
       setError(null);
@@ -39,7 +38,7 @@ export default function SignUp() {
       setError(error.message);
     }
   };
-  // console.log(formData);
+
   return (
     <div className="p-5 max-w-lg mx-auto">
       <h1 className="text-3xl text-center font-semibold my-7">Sign Up</h1>

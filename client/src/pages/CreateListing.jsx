@@ -320,7 +320,7 @@ export default function CreateListing() {
           </div>
           {uploading && (
             <div className="flex justify-center items-center w-full">
-              <div className="spinner "></div>
+              <div className="spinner"></div>
             </div>
           )}
           <p className="text-red-700">{imageUploadError && imageUploadError}</p>

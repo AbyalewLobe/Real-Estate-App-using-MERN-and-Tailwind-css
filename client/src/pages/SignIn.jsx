@@ -34,7 +34,6 @@ export default function SignIn() {
       if (data.success === false) {
         dispatch(signInFailure(data.message));
         return;
-        // console.log(data);
       }
       dispatch(signInSucess(data));
       navigate("/");
@@ -42,7 +41,7 @@ export default function SignIn() {
       dispatch(signInFailure(error.message));
     }
   };
-  // console.log(formData);
+
   return (
     <div className="p-5 max-w-lg mx-auto">
       <h1 className="text-3xl text-center font-semibold my-7">Sign In</h1>

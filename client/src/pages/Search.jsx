@@ -50,7 +50,7 @@ export default function Search() {
     if (sidebardata.searchTerm.trim()) {
       urlParams.set("searchTerm", sidebardata.searchTerm);
     }
-    // urlParams.set("searchTerm", sidebardata.searchTerm);
+
     urlParams.set("type", sidebardata.type);
     urlParams.set("parking", sidebardata.parking);
     urlParams.set("furnished", sidebardata.furnished);
@@ -243,18 +243,13 @@ export default function Search() {
           )}
           {loading && (
             <div className="w-full h-[500px] flex justify-center items-center flex-col gap-2">
-              {/* <div className="spinner"></div> */}
               <Lottie animationData={animationData} loop={true} />
               <p className="text-xl text-slate-700 text-center w-full">
                 Loading......
               </p>
             </div>
           )}
-          {/* {loading && (
-            <p className="text-xl text-slate-700 text-center w-full">
-              Loading......
-            </p>
-          )} */}
+
           {!loading &&
             listings &&
             listings.map((listing) => (
