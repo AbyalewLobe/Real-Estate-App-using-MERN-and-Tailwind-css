@@ -300,7 +300,7 @@ export default function CreateListing() {
               The first image will be the cover (max 6)
             </span>
           </p>
-          <div className="flex gap-4">
+          <div className="flex gap-4 ">
             <input
               onChange={(e) => setFile(e.target.files)}
               className="p-3 border border-gray-300 rounded w-full"
@@ -318,6 +318,11 @@ export default function CreateListing() {
               {uploading ? "Uploading....." : "Upload"}
             </button>
           </div>
+          {uploading && (
+            <div className="flex justify-center items-center w-full">
+              <div className="spinner "></div>
+            </div>
+          )}
           <p className="text-red-700">{imageUploadError && imageUploadError}</p>
           {formData.imageUrls.length > 0 &&
             formData.imageUrls.map((url, index) => (

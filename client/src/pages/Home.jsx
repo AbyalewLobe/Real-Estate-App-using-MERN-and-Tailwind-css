@@ -65,10 +65,12 @@ export default function Home() {
           the right home should feel just as good as living in it.
         </div>
         <Link
-          className="text-xs sm:text-sm text-blue-800 font-bold hover:underline "
+          className="text-xs sm:text-sm text-white font-bold hover:underline "
           to={"/search"}
         >
-          Let's get started now...
+          <button className="p-3 rounded-lg border px-5 bg-green-700">
+            Start now..
+          </button>
         </Link>
       </div>
 

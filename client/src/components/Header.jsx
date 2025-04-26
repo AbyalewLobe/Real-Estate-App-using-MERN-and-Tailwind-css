@@ -8,16 +8,19 @@ export default function Header() {
   const navigate = useNavigate();
   const handleSubmit = (e) => {
     e.preventDefault();
-    const urlParams = new URLSearchParams(window.location.search);
-    urlParams.set("searchTerm", searchTerm);
-    const searchQuery = urlParams.toString();
-    navigate(`/search?${searchQuery}`);
+    const urlParams = new URLSearchParams();
+    if (searchTerm.trim()) {
+      urlParams.set("searchTerm", searchTerm.trim());
+    }
+    navigate(`/search?${urlParams.toString()}`);
   };
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
     const searchTermUrl = urlParams.get("searchTerm");
-    if (setSearchTerm) {
+    if (searchTermUrl) {
       setSearchTerm(searchTermUrl);
+    } else {
+      setSearchTerm("");
     }
   }, [location.search]);
   return (
@@ -64,7 +67,7 @@ export default function Header() {
                 alt="profile"
               />
             ) : (
-              <li className=" sm:inline text-slate-700 hover:underline">
+              <li className=" sm:inline text-gray-400 hover:underline">
                 Sign In
               </li>
             )}

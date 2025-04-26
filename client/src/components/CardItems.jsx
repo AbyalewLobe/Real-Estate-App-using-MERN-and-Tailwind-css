@@ -29,16 +29,21 @@ export default function CardItems({ listing }) {
               : listing.regularPrice.toLocaleString("en-US")}
             {listing.type === "rent" && "/ month"}
           </p>
-          <div className="text-slate-700 flex gap-4">
-            <div className="font-bold text-xs">
-              {listing.bedrooms > 1
-                ? `${listing.bedrooms} beds`
-                : `${listing.bedrooms} bed`}
+          <div className="flex justify-between items-center ">
+            <div className="text-slate-700 flex gap-4">
+              <div className="font-bold text-xs">
+                {listing.bedrooms > 1
+                  ? `${listing.bedrooms} beds`
+                  : `${listing.bedrooms} bed`}
+              </div>
+              <div className="font-bold text-xs">
+                {listing.bathrooms > 1
+                  ? `${listing.bathrooms} baths`
+                  : `${listing.bathrooms} bath`}
+              </div>
             </div>
-            <div className="font-bold text-xs">
-              {listing.bathrooms > 1
-                ? `${listing.bathrooms} baths`
-                : `${listing.bathrooms} bath`}
+            <div className="text-sm pr-3 text-blue-600">
+              <Link>show more..</Link>
             </div>
           </div>
         </div>

@@ -27,6 +27,7 @@ export default function Profile() {
   const [updateSuccess, setUpdateSuccess] = useState(false);
   const [showListingError, setShowListingError] = useState(false);
   const [userListings, setUserListings] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   console.log(file);
   console.log(formData);
@@ -52,6 +53,7 @@ export default function Profile() {
     }
 
     try {
+      setIsLoading(true);
       const fileId = `unique()`; // Generates a unique ID
       const response = await storage.createFile(
         "67d6b927001599b4e502",
@@ -68,9 +70,11 @@ export default function Profile() {
 
       console.log(imageUrl);
       setFormData({ ...formData, avatar: imageUrl });
+      setIsLoading(false);
       console.log(imageUrl);
     } catch (error) {
       console.error("Upload failed:", error);
+      setIsLoading(false);
       setIsUplodeE(true);
     }
   };
@@ -190,6 +194,7 @@ export default function Profile() {
           src={imageUrl || currentUser.avatar}
           alt="profile"
         />
+
         <p className="text-center self-center">
           {imageUrl ? (
             <span className="text-green-700">
@@ -200,7 +205,9 @@ export default function Profile() {
           ) : (
             ""
           )}
+          {isLoading && <div className="spinner"></div>}
         </p>
+
         <input
           type="text"
           placeholder="username"

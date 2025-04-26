@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
-import { data, useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import Lottie from "lottie-react";
+import animationData from "./loading.json";
 import CardItems from "../components/CardItems";
 export default function Search() {
   const [sidebardata, setsidebardata] = useState({
@@ -12,7 +14,7 @@ export default function Search() {
     order: "desc",
   });
   const navigate = useNavigate();
-
+  const location = useLocation();
   const handleChange = (e) => {
     if (
       e.target.id === "all" ||
@@ -45,7 +47,10 @@ export default function Search() {
   const handleSubmit = (e) => {
     e.preventDefault();
     const urlParams = new URLSearchParams();
-    urlParams.set("searchTerm", sidebardata.searchTerm);
+    if (sidebardata.searchTerm.trim()) {
+      urlParams.set("searchTerm", sidebardata.searchTerm);
+    }
+    // urlParams.set("searchTerm", sidebardata.searchTerm);
     urlParams.set("type", sidebardata.type);
     urlParams.set("parking", sidebardata.parking);
     urlParams.set("furnished", sidebardata.furnished);
@@ -78,7 +83,10 @@ export default function Search() {
       orderFormUrl
     ) {
       setsidebardata({
-        searchTerm: searchTermFormUrl || "",
+        searchTerm:
+          searchTermFormUrl === "null" || !searchTermFormUrl
+            ? ""
+            : searchTermFormUrl,
         type: typeFormUrl || "all",
         parking: parkingFormUrl === "true" ? true : false,
         furnished: furnishedFormUrl === "true" ? true : false,
@@ -234,10 +242,19 @@ export default function Search() {
             <p className="text-xl text-slate-700">No listing found!</p>
           )}
           {loading && (
+            <div className="w-full h-[500px] flex justify-center items-center flex-col gap-2">
+              {/* <div className="spinner"></div> */}
+              <Lottie animationData={animationData} loop={true} />
+              <p className="text-xl text-slate-700 text-center w-full">
+                Loading......
+              </p>
+            </div>
+          )}
+          {/* {loading && (
             <p className="text-xl text-slate-700 text-center w-full">
               Loading......
             </p>
-          )}
+          )} */}
           {!loading &&
             listings &&
             listings.map((listing) => (
