@@ -25,7 +25,7 @@ export default function CreateListing() {
     parking: false,
     furnished: false,
   });
-  console.log(formData);
+  // console.log(formData);
   useEffect(() => {
     const fetchListing = async () => {
       const listingId = params.listingId;
@@ -33,7 +33,7 @@ export default function CreateListing() {
       const data = await res.json();
 
       if (data.success === false) {
-        console.log(data.message);
+        // console.log(data.message);
       }
       setFormData(data);
     };
@@ -52,8 +52,8 @@ export default function CreateListing() {
           ...prevFormData,
           imageUrls: [...prevFormData.imageUrls, ...newImageUrl],
         }));
-        console.log("All images uploaded successfully:", newImageUrl);
-        console.log(formData);
+        // console.log("All images uploaded successfully:", newImageUrl);
+        // console.log(formData);
 
         setImageUploadError(false);
         setUploading(false);
@@ -63,7 +63,7 @@ export default function CreateListing() {
         setUploading(false);
       }
     } else {
-      console.error("Please upload between 1 and 6 images.");
+      // console.error("Please upload between 1 and 6 images.");
       setImageUploadError(
         "You can upload a minimum of 1 and a maximum of 6 images"
       );
@@ -72,7 +72,7 @@ export default function CreateListing() {
   };
 
   const storeImage = async (file) => {
-    console.log("File to upload:", file);
+    // console.log("File to upload:", file);
     try {
       const fileId = `unique-${Date.now()}`;
       const response = await storage.createFile(
@@ -80,13 +80,13 @@ export default function CreateListing() {
         fileId,
         file
       );
-      console.log("Response from Appwrite:", response);
+      // console.log("Response from Appwrite:", response);
 
       const imageUrl = await storage.getFileView(
         "67d6b927001599b4e502",
         response.$id
       );
-      console.log("Image URL:", imageUrl);
+      // console.log("Image URL:", imageUrl);
       return imageUrl;
     } catch (error) {
       console.error("Error storing image:", error);

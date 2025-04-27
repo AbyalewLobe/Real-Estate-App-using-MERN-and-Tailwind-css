@@ -29,8 +29,8 @@ export default function Profile() {
   const [userListings, setUserListings] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
-  console.log(file);
-  console.log(formData);
+  // console.log(file);
+  // console.log(formData);
 
   useEffect(() => {
     if (file) {
@@ -42,13 +42,13 @@ export default function Profile() {
     const selectedFile = event.target.files[0];
     if (selectedFile) {
       setFile(selectedFile);
-      console.log(file);
+      // console.log(file);
     }
   };
 
   const handleFileUpload = async (file) => {
     if (!file) {
-      console.error("No file selected.");
+      // console.error("No file selected.");
       return;
     }
 
@@ -60,7 +60,7 @@ export default function Profile() {
         fileId,
         file
       );
-      console.log("Upload successful:", response);
+      // console.log("Upload successful:", response);
 
       const imageUrl = storage.getFilePreview(
         "67d6b927001599b4e502",
@@ -68,10 +68,10 @@ export default function Profile() {
       );
       setImageUrl(imageUrl);
 
-      console.log(imageUrl);
+      // console.log(imageUrl);
       setFormData({ ...formData, avatar: imageUrl });
       setIsLoading(false);
-      console.log(imageUrl);
+      // console.log(imageUrl);
     } catch (error) {
       console.error("Upload failed:", error);
       setIsLoading(false);
@@ -145,7 +145,7 @@ export default function Profile() {
       }
 
       const data = await res.json();
-      console.log("Listings data:", data);
+      // console.log("Listings data:", data);
 
       if (data.success === false) {
         setShowListingError(true);
@@ -166,7 +166,7 @@ export default function Profile() {
       });
       const data = await res.json();
       if (data.success === false) {
-        console.log(data.message);
+        // console.log(data.message);
         return;
       }
       setUserListings((prev) =>
