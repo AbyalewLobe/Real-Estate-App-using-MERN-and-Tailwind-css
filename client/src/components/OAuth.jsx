@@ -3,6 +3,7 @@ import { app } from "../firebase";
 import { useDispatch } from "react-redux";
 import { signInSucess } from "../redux/user/userSlice";
 import { useNavigate } from "react-router-dom";
+import { FcGoogle } from "react-icons/fc";
 export default function OAuth() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -33,9 +34,10 @@ export default function OAuth() {
     <button
       type="button"
       onClick={handleGoogleClick}
-      className="bg-red-700 p-3 rounded-lg text-white hover:opacity-95 uppercase"
+      className="bg-red-700 p-3 rounded-lg text-white hover:opacity-95 uppercase items-center justify-center flex gap-5"
     >
-      Continue With Google
+      <FcGoogle className="w-6 h-6 " />
+      <p>Continue With Google</p> {/* Fixed the closing p tag */}
     </button>
   );
 }
