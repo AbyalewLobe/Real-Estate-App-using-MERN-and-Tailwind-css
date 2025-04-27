@@ -18,6 +18,7 @@ export default function Listing() {
   SwiperCore.use([Navigation, Pagination]);
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [linkCopied, setLinkCopied] = useState(false);
   const [error, setError] = useState(false);
   const params = useParams();
   const { currentUser } = useSelector((state) => state.user);
@@ -45,6 +46,15 @@ export default function Listing() {
     };
     fechListing();
   }, [params.listingId]);
+
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(window.location.href);
+    setLinkCopied(true);
+
+    setTimeout(() => {
+      setLinkCopied(false);
+    }, 2000);
+  };
   return (
     <main className="bg-gray-100 min-h-screen">
       {loading && <p className="text-center my-7 text=2xl">Loading...</p>}
@@ -70,13 +80,17 @@ export default function Listing() {
 
                 <button
                   className="absolute top-4 right-4 bg-white p-2 rounded-full shadow hover:bg-gray-100 transition"
-                  onClick={() =>
-                    navigator.clipboard.writeText(window.location.href)
-                  }
+                  onClick={handleCopyLink}
                   title="Share listing"
                 >
                   <FaShareAlt className="text-gray-600" />
                 </button>
+
+                {linkCopied && (
+                  <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-md text-sm">
+                    Link copied to clipboard!
+                  </div>
+                )}
               </SwiperSlide>
             ))}
           </Swiper>

@@ -62,7 +62,7 @@ export default function Profile() {
       );
       // console.log("Upload successful:", response);
 
-      const imageUrl = storage.getFilePreview(
+      const imageUrl = storage.getFileView(
         "67d6b927001599b4e502",
         response.$id
       );
