@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { storage } from "../appWrite/appwriteConfig";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-hot-toast";
 export default function CreateListing() {
   const navigate = useNavigate();
   const [files, setFile] = useState([]);
@@ -136,10 +137,13 @@ export default function CreateListing() {
       const data = await res.json();
       setLoading(false);
       if (data.success === false) {
+        toast.error("List Createing failed");
         setError(data.message);
       }
+      toast.success("List created successfully");
       navigate(`/listing/${data._id}`);
     } catch (error) {
+      toast.error("List Createing failed");
       setError(error.message);
       setLoading(false);
     }

@@ -32,6 +32,7 @@ export default function SignIn() {
       });
       const data = await res.json();
       if (data.success === false) {
+        toast.error("Login failed");
         dispatch(signInFailure(data.message));
         return;
       }
