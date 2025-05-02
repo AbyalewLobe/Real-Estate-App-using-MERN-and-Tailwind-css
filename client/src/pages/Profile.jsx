@@ -116,6 +116,42 @@ export default function Profile() {
       toast.error("Account deletion failed");
     }
   };
+  const handleDeleteConfirmation = () => {
+    toast.custom((t) => (
+      <div
+        className={`${
+          t.visible ? "animate-enter" : "animate-leave"
+        } max-w-sm w-full bg-white shadow-lg rounded-lg pointer-events-auto ring-1 ring-black ring-opacity-5`}
+      >
+        <div className="p-4">
+          <h2 className="text-lg font-semibold text-gray-900">
+            Confirm Deletion
+          </h2>
+          <p className="text-sm text-gray-600 mt-1">
+            Are you sure you want to permanently delete your account? This
+            action cannot be undone.
+          </p>
+          <div className="mt-4 flex justify-end gap-2">
+            <button
+              onClick={() => {
+                toast.dismiss(t.id);
+                handleDeleteUser();
+              }}
+              className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 text-sm"
+            >
+              Yes, Delete
+            </button>
+            <button
+              onClick={() => toast.dismiss(t.id)}
+              className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 text-sm"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    ));
+  };
 
   const handleSignOut = async () => {
     try {
@@ -177,6 +213,42 @@ export default function Profile() {
     } catch (error) {
       toast.error("Failed to delete listing");
     }
+  };
+
+  const handleListingDeleteConfirmation = (listingId) => {
+    toast.custom((t) => (
+      <div
+        className={`${
+          t.visible ? "animate-enter" : "animate-leave"
+        } max-w-sm w-full bg-white shadow-lg rounded-lg pointer-events-auto ring-1 ring-black ring-opacity-5`}
+      >
+        <div className="p-4">
+          <h2 className="text-lg font-semibold text-gray-900">
+            Delete Listing?
+          </h2>
+          <p className="text-sm text-gray-600 mt-1">
+            This listing will be permanently removed. Are you sure?
+          </p>
+          <div className="mt-4 flex justify-end gap-2">
+            <button
+              onClick={() => {
+                toast.dismiss(t.id);
+                handleListingDelete(listingId);
+              }}
+              className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 text-sm"
+            >
+              Yes, Delete
+            </button>
+            <button
+              onClick={() => toast.dismiss(t.id)}
+              className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 text-sm"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    ));
   };
 
   return (
@@ -244,11 +316,12 @@ export default function Profile() {
 
       <div className="flex justify-between mt-3">
         <span
-          onClick={handleDeleteUser}
+          onClick={handleDeleteConfirmation}
           className="text-red-700 cursor-pointer"
         >
           Delete account
         </span>
+
         <span onClick={handleSignOut} className="text-red-700 cursor-pointer">
           Sign Out
         </span>
@@ -284,7 +357,7 @@ export default function Profile() {
               </Link>
               <div className="flex flex-col items-center gap-1">
                 <button
-                  onClick={() => handleListingDelete(listing._id)}
+                  onClick={() => handleListingDeleteConfirmation(listing._id)}
                   className="text-red-700 text-sm"
                 >
                   Delete
