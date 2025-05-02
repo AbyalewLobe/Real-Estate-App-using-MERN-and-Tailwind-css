@@ -17,7 +17,7 @@ import Management from "./pages/Admin/Management";
 import DashboardOverview from "./pages/Admin/DashboardOverview";
 import AdminProfile from "./pages/Admin/AdminProfile";
 import Settings from "./pages/Admin/Settings";
-
+import { Toaster } from "react-hot-toast";
 // User layout with Header and Footer
 const UserLayout = () => (
   <>
@@ -30,6 +30,7 @@ const UserLayout = () => (
 export default function App() {
   return (
     <BrowserRouter>
+      <Toaster position="top-right" reverseOrder={false} />
       <Routes>
         {/* User routes */}
         <Route element={<UserLayout />}>

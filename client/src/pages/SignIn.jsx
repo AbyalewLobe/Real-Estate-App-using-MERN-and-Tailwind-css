@@ -7,7 +7,7 @@ import {
   signInSucess,
   signInFailure,
 } from "../redux/user/userSlice";
-
+import { toast } from "react-hot-toast";
 export default function SignIn() {
   const [formData, setFormData] = useState({});
   const { error, loading } = useSelector((state) => state.user);
@@ -35,9 +35,11 @@ export default function SignIn() {
         dispatch(signInFailure(data.message));
         return;
       }
+      toast.success("Login successfully");
       dispatch(signInSucess(data));
       navigate("/");
     } catch (error) {
+      toast.error("Login failed");
       dispatch(signInFailure(error.message));
     }
   };
