@@ -1,73 +1,54 @@
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Input } from "@/components/ui/input";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Outlet, Link, useLocation } from "react-router-dom";
 import { Home, Users, FileText, Settings, UserCircle2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
-export default function EstateAdminDashboard() {
+export default function AdminDashboardLayout() {
+  const location = useLocation();
+
   return (
     <div className="flex min-h-screen">
       {/* Sidebar */}
       <aside className="w-64 bg-white border-r shadow-sm p-4 space-y-6">
         <div className="text-2xl font-bold text-center">Estate Admin</div>
         <nav className="space-y-2">
-          <Button variant="ghost" className="w-full justify-start">
-            <Home className="mr-2 h-5 w-5" /> Dashboard
-          </Button>
-          <Link to={"Management"}>
-            <Button variant="ghost" className="w-full justify-start">
+          <Link to="/admin/dashboard">
+            <Button
+              variant="ghost"
+              className={`w-full justify-start ${
+                location.pathname === "/admin/dashboard" ? "bg-gray-100" : ""
+              }`}
+            >
+              <Home className="mr-2 h-5 w-5" /> Dashboard
+            </Button>
+          </Link>
+          <Link to="/admin/dashboard/management">
+            <Button
+              variant="ghost"
+              className={`w-full justify-start ${
+                location.pathname.includes("management") ? "bg-gray-100" : ""
+              }`}
+            >
               <Users className="mr-2 h-5 w-5" /> Management
             </Button>
           </Link>
-
-          {/* <Link to={"listingManagement"}>
+          <Link to={"/admin/dashboard/admin-profile"}>
             <Button variant="ghost" className="w-full justify-start">
-              <FileText className="mr-2 h-5 w-5" /> Listings Management
+              <UserCircle2 className="mr-2 h-5 w-5" /> Profile
             </Button>
-          </Link> */}
+          </Link>
 
-          <Button variant="ghost" className="w-full justify-start">
-            <UserCircle2 className="mr-2 h-5 w-5" /> Profile
-          </Button>
-          <Button variant="ghost" className="w-full justify-start">
-            <Settings className="mr-2 h-5 w-5" /> Settings
-          </Button>
+          <Link to={"/admin/dashboard/settings"}>
+            <Button variant="ghost" className="w-full justify-start">
+              <Settings className="mr-2 h-5 w-5" /> Settings
+            </Button>
+          </Link>
         </nav>
       </aside>
 
       {/* Main Content */}
       <main className="flex-1 p-6 bg-gray-50">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 p-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Total User</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="font-semibold text-blue-600">200000</p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Active Listings</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="font-semibold text-blue-600">100,000 +</p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Revenue</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="font-semibold text-blue-600">300</p>
-            </CardContent>
-          </Card>
-        </div>
+        <Outlet />
       </main>
     </div>
   );
