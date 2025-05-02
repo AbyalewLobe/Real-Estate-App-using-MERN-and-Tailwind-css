@@ -54,8 +54,8 @@ export default function Profile() {
         "67d6b927001599b4e502",
         response.$id
       );
-      setImageUrl(imageUrl.href);
-      setFormData({ ...formData, avatar: imageUrl.href });
+      setImageUrl(imageUrl);
+      setFormData({ ...formData, avatar: imageUrl });
       setUploadError(false);
     } catch (error) {
       console.error("Upload failed:", error);
@@ -274,7 +274,12 @@ export default function Profile() {
           <p className="text-red-700 text-center">Image upload error</p>
         )}
         {isLoading && (
-          <p className="text-blue-500 text-center">Uploading image...</p>
+          <div className="flex justify-center items-center w-full ">
+            <div className="spinner w-4 h-4"></div>
+          </div>
+        )}
+        {isLoading && (
+          <p className="text-blue-500 text-center ">Uploading image...</p>
         )}
 
         <input
