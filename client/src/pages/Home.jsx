@@ -53,7 +53,7 @@ export default function Home() {
       } catch (error) {
         setLoading(false);
         console.log(error);
-      }
+      }  
     };
     fetchOfferListings();
   }, []);

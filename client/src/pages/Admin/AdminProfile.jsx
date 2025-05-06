@@ -119,13 +119,15 @@ export default function AdminProfile() {
             </CardHeader>
             <CardContent className="flex flex-col sm:flex-row sm:items-center gap-6">
               <Avatar className="w-20 h-20">
-                <AvatarImage src="/placeholder.jpg" alt="user avatar" />
+                <AvatarImage src={currentUser.avatar} alt="user avatar" />
                 <AvatarFallback>JD</AvatarFallback>
               </Avatar>
               <div className="flex-1">
-                <h2 className="text-xl font-semibold">John Doe</h2>
-                <p className="text-gray-500">Role: Admin</p>
-                <p className="text-gray-500">johndoe@example.com</p>
+                <h2 className="text-xl font-semibold">{currentUser.name}</h2>
+                <p className="text-gray-500">
+                  Role: {currentUser.isAdmin && "Admin"}
+                </p>
+                <p className="text-gray-500">{currentUser.email}</p>
                 <p className="text-sm text-muted-foreground mt-1">
                   Real Estate Agent | Joined Jan 2024
                 </p>

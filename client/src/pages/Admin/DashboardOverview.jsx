@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 // import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 import {
@@ -58,6 +58,46 @@ const barData = [
 //   const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
 export default function DashboardOverview() {
+  const [allUsers, setAllUsers] = useState([]);
+  const [getAllListings, setGetAllListings] = useState([]);
+  const [sellListings, setSellListings] = useState([]);
+  useEffect(() => {
+    const getAllUsers = async () => {
+      try {
+        const res = await fetch(`/api/user/getAllUsers`);
+        const data = await res.json();
+        console.log("Users:", data);
+        setAllUsers(data);
+        getAllListing(); // call after users are fetched
+      } catch (error) {
+        console.error("Failed to fetch users:", error);
+      }
+    };
+
+    const getAllListing = async () => {
+      try {
+        const res = await fetch(`/api/listing/get`);
+        const data = await res.json();
+        console.log("Listings:", data);
+        setGetAllListings(data);
+        fetchSellListing();
+      } catch (error) {
+        console.error("Failed to fetch listings:", error);
+      }
+    };
+    const fetchSellListing = async () => {
+      try {
+        const res = await fetch(`/api/listing/get?type=rent`);
+        const data = await res.json();
+        console.log("sell listings:", data);
+        setSellListings(data);
+      } catch (error) {
+        console.error("Failed to fetch listings:", error);
+      }
+    };
+
+    getAllUsers();
+  }, []);
   return (
     <div className="p-4 flex flex-col gap-5">
       <h1 className="p-2 text-2xl font-bold">Dashboard Overview</h1>
@@ -69,25 +109,29 @@ export default function DashboardOverview() {
             <CardTitle>Total User</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="font-semibold text-blue-600">200,000</p>
+            <p className="font-semibold text-blue-600">{allUsers.length} +</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle>Active Listings</CardTitle>
+            <CardTitle>All Listings</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="font-semibold text-blue-600">100,000 +</p>
+            <p className="font-semibold text-blue-600">
+              {getAllListings.length} +
+            </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle>Revenue</CardTitle>
+            <CardTitle>Rent Listing</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="font-semibold text-blue-600">$300,000</p>
+            <p className="font-semibold text-blue-600">
+              {sellListings.length} +
+            </p>
           </CardContent>
         </Card>
       </div>
