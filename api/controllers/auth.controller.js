@@ -3,9 +3,14 @@ import bcryptjs from "bcryptjs";
 import { errorHanndle } from "../utils/error.js";
 import jwt from "jsonwebtoken";
 export const signup = async (req, res, next) => {
-  const { username, email, password } = req.body;
+  const { username, email, password, isAdmin } = req.body;
   const hashPassword = bcryptjs.hashSync(password, 10);
-  const newUser = new User({ username, email, password: hashPassword });
+  const newUser = new User({
+    username,
+    email,
+    password: hashPassword,
+    isAdmin: isAdmin || false,
+  });
   try {
     await newUser.save();
     res.status(201).json({ message: "User registered successfully!" });
@@ -76,4 +81,11 @@ export const signOut = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+};
+
+export const admin = (req, res) => {
+  res.status(200).json({
+    message: "Welcome Admin!",
+    user: req.user,
+  });
 };

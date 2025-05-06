@@ -18,6 +18,7 @@ import DashboardOverview from "./pages/Admin/DashboardOverview";
 import AdminProfile from "./pages/Admin/AdminProfile";
 import Settings from "./pages/Admin/Settings";
 import { Toaster } from "react-hot-toast";
+import AdminRoute from "./components/AdminRoute";
 // User layout with Header and Footer
 const UserLayout = () => (
   <>
@@ -51,19 +52,13 @@ export default function App() {
         </Route>
 
         {/* Admin dashboard layout */}
-        <Route path="/admin/dashboard" element={<AdminDashboardLayout />}>
-          {/* <Route
-            index
-            element={
-              <div className="p-6 text-xl font-bold">
-                Welcome to Admin Dashboard
-              </div>
-            }
-          /> */}
-          <Route index element={<DashboardOverview />} />
-          <Route path="management" element={<Management />} />
-          <Route path="admin-profile" element={<AdminProfile />} />
-          <Route path="settings" element={<Settings />} />
+        <Route element={<AdminRoute />}>
+          <Route path="/admin" element={<AdminDashboardLayout />}>
+            <Route index element={<DashboardOverview />} />
+            <Route path="management" element={<Management />} />
+            <Route path="admin-profile" element={<AdminProfile />} />
+            <Route path="settings" element={<Settings />} />
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>

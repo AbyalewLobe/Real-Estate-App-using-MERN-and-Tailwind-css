@@ -93,7 +93,7 @@ export default function Management() {
                       placeholder="Search users..."
                       className="w-full md:w-64"
                     />
-                    <Button>Add User</Button>
+                    {/* <Button >Add User</Button> */}
                     {selectedUsers.length > 0 && (
                       <Button
                         variant="destructive"
@@ -153,9 +153,6 @@ export default function Management() {
                             </Select>
                           </td>
                           <td className="px-4 py-3 text-right space-x-2">
-                            <Button size="sm" variant="outline">
-                              Edit
-                            </Button>
                             <Button size="sm" variant="destructive">
                               Delete
                             </Button>
@@ -178,7 +175,7 @@ export default function Management() {
                       placeholder="Search listings..."
                       className="w-full md:w-64"
                     />
-                    <Button>Add Listing</Button>
+                    {/* <Button>Add Listing</Button> */}
                     {selectedListings.length > 0 && (
                       <Button
                         variant="destructive"
@@ -244,9 +241,6 @@ export default function Management() {
                             </Select>
                           </td>
                           <td className="px-4 py-3 text-right space-x-2">
-                            <Button size="sm" variant="outline">
-                              Edit
-                            </Button>
                             <Button size="sm" variant="destructive">
                               Delete
                             </Button>

@@ -38,7 +38,11 @@ export default function SignIn() {
       }
       toast.success("Login successfully");
       dispatch(signInSucess(data));
-      navigate("/");
+      if (data.isAdmin) {
+        navigate("/admin");
+      } else {
+        navigate("/");
+      }
     } catch (error) {
       toast.error("Login failed");
       dispatch(signInFailure(error.message));
