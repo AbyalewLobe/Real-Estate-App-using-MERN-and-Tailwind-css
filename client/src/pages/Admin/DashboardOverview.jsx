@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-// import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
+
 import {
   BarChart,
   Bar,
@@ -15,15 +15,12 @@ import {
   Legend,
 } from "recharts";
 
-// import { ListingsChart } from "@/components/ListingsChart";
-
-// Demo chart data
 const pieData = [
   { name: "active", value: 400 },
   { name: "sold", value: 120 },
 ];
 
-const pieColors = ["#4f46e5", "#10b981", "#f97316"]; // Indigo, Emerald, Orange
+const pieColors = ["#4f46e5", "#10b981", "#f97316"];
 
 const barData = [
   { name: "Mon", posts: 30, users: 10 },
@@ -34,28 +31,6 @@ const barData = [
   { name: "Sat", posts: 34, users: 20 },
   { name: "Sun", posts: 44, users: 25 },
 ];
-
-// const data = [
-//   { name: "Group A", value: 400 },
-//   { name: "Group B", value: 300 },
-//   { name: "Group C", value: 300 },
-//   { name: "Group D", value: 200 },
-// ];
-
-// const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
-
-// const RADIAN = Math.PI / 180;
-// const renderCustomizedLabel = ({
-//   cx,
-//   cy,
-//   midAngle,
-//   innerRadius,
-//   outerRadius,
-//   percent,
-// }) => {
-//   const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-//   const x = cx + radius * Math.cos(-midAngle * RADIAN);
-//   const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
 export default function DashboardOverview() {
   const [allUsers, setAllUsers] = useState([]);
@@ -68,7 +43,7 @@ export default function DashboardOverview() {
         const data = await res.json();
         console.log("Users:", data);
         setAllUsers(data);
-        getAllListing(); // call after users are fetched
+        getAllListing();
       } catch (error) {
         console.error("Failed to fetch users:", error);
       }

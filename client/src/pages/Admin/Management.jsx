@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -12,38 +12,61 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 
-const initialUsers = [
-  { id: 1, name: "John Doe", email: "john@example.com", role: "Agent" },
-  { id: 2, name: "Jane Smith", email: "jane@example.com", role: "Tenant" },
-  { id: 3, name: "Admin User", email: "admin@example.com", role: "Admin" },
-];
-
-const initialListings = [
-  {
-    id: 1,
-    title: "Luxury Villa",
-    location: "Addis Ababa",
-    price: "$500,000",
-  },
-  {
-    id: 2,
-    title: "Modern Apartment",
-    location: "Bole",
-    price: "$150,000",
-  },
-  {
-    id: 3,
-    title: "Townhouse",
-    location: "Kazanchis",
-    price: "$300,000",
-  },
-];
-
 export default function Management() {
-  const [users, setUsers] = useState(initialUsers);
+  const [allUsers, setAllUsers] = useState([]);
+  const [allListings, setAllListings] = useState([]);
+  useEffect(() => {
+    const getAllUsers = async () => {
+      try {
+        const res = await fetch(`/api/user/getAllUsers`);
+        const data = await res.json();
+        console.log("users:", data);
+        setAllUsers(data);
+        getAllListings();
+      } catch (error) {
+        console.error("Failed to fetch users:", error);
+      }
+    };
+    const getAllListings = async () => {
+      try {
+        const res = await fetch(`/api/listing/getListingForAdmin`);
+        const data = await res.json();
+        console.log("listings:", data);
+        setAllListings(data);
+      } catch (error) {
+        console.error("Failed to fetch users:", error);
+      }
+    };
+    getAllUsers();
+  }, []);
+
+  const handleStatusChange = async (id, newStatus) => {
+    try {
+      const res = await fetch(`/api/listing/status/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ status: newStatus }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to update status");
+      }
+
+      const updated = await res.json();
+      setAllListings((prev) =>
+        prev.map((l) => (l._id === id ? updated.data : l))
+      );
+    } catch (err) {
+      console.error("Error updating status:", err.message);
+    }
+  };
+
+  const [users, setUsers] = useState(allUsers);
   const [selectedUsers, setSelectedUsers] = useState([]);
 
-  const [listings, setListings] = useState(initialListings);
+  const [listings, setListings] = useState(allListings);
   const [selectedListings, setSelectedListings] = useState([]);
 
   const toggleUserSelect = (id) => {
@@ -59,16 +82,18 @@ export default function Management() {
   };
 
   const deleteSelectedUsers = () =>
-    setUsers((prev) => prev.filter((u) => !selectedUsers.includes(u.id)));
+    setUsers((prev) => prev.filter((u) => !selectedUsers.includes(u._id)));
 
   const deleteSelectedListings = () =>
-    setListings((prev) => prev.filter((l) => !selectedListings.includes(l.id)));
+    setListings((prev) =>
+      prev.filter((l) => !selectedListings.includes(l._id))
+    );
 
   const toggleSelectAll = (type, checked) => {
     if (type === "users") {
-      setSelectedUsers(checked ? users.map((u) => u.id) : []);
+      setSelectedUsers(checked ? users.map((u) => u._id) : []);
     } else {
-      setSelectedListings(checked ? listings.map((l) => l.id) : []);
+      setSelectedListings(checked ? listings.map((l) => l._id) : []);
     }
   };
 
@@ -126,18 +151,20 @@ export default function Management() {
                       </tr>
                     </thead>
                     <tbody className="divide-y bg-white">
-                      {users.map((user) => (
-                        <tr key={user.id}>
+                      {allUsers.map((user) => (
+                        <tr key={user._id}>
                           <td className="px-4 py-3">
                             <input
                               type="checkbox"
-                              checked={selectedUsers.includes(user.id)}
-                              onChange={() => toggleUserSelect(user.id)}
+                              checked={selectedUsers.includes(user._id)}
+                              onChange={() => toggleUserSelect(user._id)}
                             />
                           </td>
                           <td className="px-4 py-3 font-medium">{user.name}</td>
                           <td className="px-4 py-3">{user.email}</td>
-                          <td className="px-4 py-3">{user.role}</td>
+                          <td className="px-4 py-3">
+                            {user.isAdmin ? "Admin" : "User"}
+                          </td>
                           <td className="px-4 py-3">
                             <Select defaultValue="active">
                               <SelectTrigger className="w-[120px]">
@@ -210,33 +237,36 @@ export default function Management() {
                       </tr>
                     </thead>
                     <tbody className="divide-y bg-white">
-                      {listings.map((listing) => (
-                        <tr key={listing.id}>
+                      {allListings.map((listing) => (
+                        <tr key={listing._id}>
                           <td className="px-4 py-3">
                             <input
                               type="checkbox"
-                              checked={selectedListings.includes(listing.id)}
-                              onChange={() => toggleListingSelect(listing.id)}
+                              checked={selectedListings.includes(listing._id)}
+                              onChange={() => toggleListingSelect(listing._id)}
                             />
                           </td>
                           <td className="px-4 py-3 font-medium">
-                            {listing.title}
+                            {listing.name}
                           </td>
-                          <td className="px-4 py-3">{listing.location}</td>
+                          <td className="px-4 py-3">{listing.address}</td>
                           <td className="px-4 py-3 text-blue-600">
-                            {listing.price}
+                            {listing.regularPrice} $
                           </td>
                           <td className="px-4 py-3">
-                            <Select defaultValue="active">
+                            <Select
+                              defaultValue={listing.status}
+                              onValueChange={(value) =>
+                                handleStatusChange(listing._id, value)
+                              }
+                            >
                               <SelectTrigger className="w-[120px]">
                                 <SelectValue />
                               </SelectTrigger>
                               <SelectContent>
                                 <SelectItem value="active">Active</SelectItem>
                                 <SelectItem value="pending">Pending</SelectItem>
-                                <SelectItem value="archived">
-                                  Archived
-                                </SelectItem>
+                                <SelectItem value="archived">Sold</SelectItem>
                               </SelectContent>
                             </Select>
                           </td>
