@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+
 import {
   Select,
   SelectTrigger,
@@ -12,9 +13,14 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 
+import { toast } from "react-hot-toast";
+import { useSelector } from "react-redux";
+
 export default function Management() {
   const [allUsers, setAllUsers] = useState([]);
   const [allListings, setAllListings] = useState([]);
+  const [userListings, setUserListings] = useState([]);
+  const { currentUser } = useSelector((state) => state.user);
   useEffect(() => {
     const getAllUsers = async () => {
       try {
@@ -95,6 +101,119 @@ export default function Management() {
     } else {
       setSelectedListings(checked ? listings.map((l) => l._id) : []);
     }
+  };
+  const handleListingDelete = async (listingId) => {
+    try {
+      const res = await fetch(`/api/listing/delete/${listingId}`, {
+        method: "DELETE",
+        credentials: "include",
+      });
+      const data = await res.json();
+
+      if (!res.ok || data.success === false) {
+        toast.error("Failed to delete listing");
+        return;
+      }
+
+      setUserListings((prev) =>
+        prev.filter((listing) => listing._id !== listingId)
+      );
+      toast.success("Listing deleted");
+    } catch (error) {
+      toast.error("Failed to delete listing");
+    }
+  };
+
+  const handleListingDeleteConfirmation = (listingId) => {
+    toast.custom((t) => (
+      <div
+        className={`${
+          t.visible ? "animate-enter" : "animate-leave"
+        } max-w-sm w-full bg-white shadow-lg rounded-lg pointer-events-auto ring-1 ring-black ring-opacity-5`}
+      >
+        <div className="p-4">
+          <h2 className="text-lg font-semibold text-gray-900">
+            Delete Listing?
+          </h2>
+          <p className="text-sm text-gray-600 mt-1">
+            This listing will be permanently removed. Are you sure?
+          </p>
+          <div className="mt-4 flex justify-end gap-2">
+            <button
+              onClick={() => {
+                toast.dismiss(t.id);
+                handleListingDelete(listingId);
+              }}
+              className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 text-sm"
+            >
+              Yes, Delete
+            </button>
+            <button
+              onClick={() => toast.dismiss(t.id)}
+              className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 text-sm"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    ));
+  };
+
+  const handleDeleteUser = async (userId) => {
+    try {
+      const res = await fetch(`/api/user/delete/${userId}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+
+      if (!res.ok || data.success === false) {
+        toast.error("User deletion failed");
+        return;
+      }
+
+      toast.success("User deleted successfully");
+      setAllUsers((prev) => prev.filter((user) => user._id !== userId));
+    } catch (error) {
+      toast.error("User deletion failed");
+    }
+  };
+
+  const handleDeleteConfirmation = (userId) => {
+    toast.custom((t) => (
+      <div
+        className={`${
+          t.visible ? "animate-enter" : "animate-leave"
+        } max-w-sm w-full bg-white shadow-lg rounded-lg pointer-events-auto ring-1 ring-black ring-opacity-5`}
+      >
+        <div className="p-4">
+          <h2 className="text-lg font-semibold text-gray-900">
+            Confirm Deletion
+          </h2>
+          <p className="text-sm text-gray-600 mt-1">
+            Are you sure you want to permanently delete this user? This action
+            cannot be undone.
+          </p>
+          <div className="mt-4 flex justify-end gap-2">
+            <button
+              onClick={() => {
+                toast.dismiss(t.id);
+                handleDeleteUser(userId);
+              }}
+              className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 text-sm"
+            >
+              Yes, Delete
+            </button>
+            <button
+              onClick={() => toast.dismiss(t.id)}
+              className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 text-sm"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    ));
   };
 
   return (
@@ -180,7 +299,11 @@ export default function Management() {
                             </Select>
                           </td>
                           <td className="px-4 py-3 text-right space-x-2">
-                            <Button size="sm" variant="destructive">
+                            <Button
+                              size="sm"
+                              variant="destructive"
+                              onClick={() => handleDeleteConfirmation(user._id)}
+                            >
                               Delete
                             </Button>
                           </td>
@@ -271,7 +394,19 @@ export default function Management() {
                             </Select>
                           </td>
                           <td className="px-4 py-3 text-right space-x-2">
-                            <Button size="sm" variant="destructive">
+                            <Button
+                              size="sm"
+                              variant="destructive"
+                              onClick={() =>
+                                handleListingDeleteConfirmation(listing._id)
+                              }
+                              disabled={
+                                !(
+                                  allUsers.isAdmin ||
+                                  allUsers._id === allListings.userRef
+                                )
+                              }
+                            >
                               Delete
                             </Button>
                           </td>

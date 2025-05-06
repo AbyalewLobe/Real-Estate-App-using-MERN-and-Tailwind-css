@@ -12,16 +12,24 @@ export const createListing = async (req, res, next) => {
 };
 
 export const deleteListing = async (req, res, next) => {
-  const listing = await Listing.findById(req.params.id);
-  if (!listing) {
-    return next(errorHanndle(401, "Listing not found!"));
-  }
-  if (req.user.id !== listing.userRef) {
-    return next(errorHanndle(401, "you can only delete your own listing!"));
-  }
   try {
+    const listing = await Listing.findById(req.params.id);
+    if (!listing) {
+      return next(errorHanndle(404, "Listing not found!"));
+    }
+
+    // Allow if the user is the creator or an admin
+    if (req.user.id !== listing.userRef.toString() && !req.user.isAdmin) {
+      return next(
+        errorHanndle(
+          403,
+          "You can only delete your own listing or if you're an admin"
+        )
+      );
+    }
+
     await Listing.findByIdAndDelete(req.params.id);
-    res.status(200).json("Listing has been Deleted!");
+    res.status(200).json("Listing has been deleted!");
   } catch (error) {
     next(error);
   }
