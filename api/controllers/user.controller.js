@@ -93,3 +93,27 @@ export const getAllUsers = async (req, res) => {
       .json({ message: "Failed to fetch users", error: error.message });
   }
 };
+
+export const verifyEmail = async (req, res) => {
+  try {
+    const user = await User.findOne({
+      verificationToken: req.params.token,
+      verificationTokenExpires: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid or expired token" });
+    }
+
+    user.emailVerified = true;
+    user.verificationToken = undefined;
+    user.verificationTokenExpires = undefined;
+    await user.save();
+
+    res.status(200).json({ success: true, message: "Email verified" });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};

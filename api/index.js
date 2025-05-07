@@ -6,7 +6,15 @@ import authRouter from "./routes/auth.route.js";
 import cookieParser from "cookie-parser";
 import listingRouter from "./routes/listing.route.js";
 import path from "path";
-dotenv.config();
+import cors from "cors";
+import { fileURLToPath } from "url";
+
+// Resolve __dirname in ES module
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Load .env
+dotenv.config({ path: path.resolve(__dirname, "../.env") });
 
 mongoose
   .connect(process.env.MONGO)
@@ -17,24 +25,32 @@ mongoose
     console.log(err);
   });
 
-const _dirname = path.resolve();
-
 const app = express();
+
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
+
 app.use(express.json());
 app.use(cookieParser());
-app.listen(3000, () => {
-  console.log("Server is running on port 3000!!");
-});
 
+// API routes
 app.use("/api/user", userRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/listing", listingRouter);
 
-app.use(express.static(path.join(_dirname, "/client/dist")));
+// Serve frontend **only in production**
+if (process.env.NODE_ENV === "production") {
+  const clientDistPath = path.join(__dirname, "../client/dist");
+  app.use(express.static(clientDistPath));
 
-app.get("*", (req, res) => {
-  res.sendFile(path.join(_dirname, "client", "dist", "index.html"));
-});
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(clientDistPath, "index.html"));
+  });
+}
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
@@ -44,4 +60,8 @@ app.use((err, req, res, next) => {
     statusCode,
     message,
   });
+});
+
+app.listen(3000, () => {
+  console.log("Server is running on port 3000!!");
 });

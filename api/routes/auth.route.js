@@ -6,6 +6,7 @@ import {
   google,
   signOut,
   admin,
+  verifyEmail,
 } from "../controllers/auth.controller.js";
 import { isAdmin } from "../utils/isAdmin.js";
 
@@ -16,4 +17,5 @@ router.post("/signin", signin);
 router.post("/google", google);
 router.get("/signout", signOut);
 router.get("/admin", isAdmin, admin);
+router.get("/verify-email/:token", verifyEmail);
 export default router;

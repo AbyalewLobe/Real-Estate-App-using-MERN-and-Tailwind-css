@@ -19,13 +19,18 @@ import AdminProfile from "./pages/Admin/AdminProfile";
 import Settings from "./pages/Admin/Settings";
 import { Toaster } from "react-hot-toast";
 import AdminRoute from "./components/AdminRoute";
+import VerifyEmail from "./pages/VerifyEmail";
+import NotFound from "./pages/Admin/NotFound";
+
 // User layout with Header and Footer
 const UserLayout = () => (
-  <>
+  <div className="min-h-screen flex flex-col">
     <Header />
-    <Outlet />
+    <main className="flex-grow">
+      <Outlet />
+    </main>
     <Footer />
-  </>
+  </div>
 );
 
 export default function App() {
@@ -38,6 +43,7 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/sign-in" element={<SignIn />} />
           <Route path="/sign-up" element={<SignUp />} />
+          <Route path="/verify-email/:token" element={<VerifyEmail />} />
           <Route path="/listing/:listingId" element={<Listing />} />
           <Route path="/search" element={<Search />} />
           <Route path="/about" element={<About />} />
@@ -49,6 +55,7 @@ export default function App() {
               element={<UpdateListing />}
             />
           </Route>
+          <Route path="*" element={<NotFound />} />
         </Route>
 
         {/* Admin dashboard layout */}
@@ -59,6 +66,7 @@ export default function App() {
             <Route path="admin-profile" element={<AdminProfile />} />
             <Route path="settings" element={<Settings />} />
           </Route>
+          <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
     </BrowserRouter>

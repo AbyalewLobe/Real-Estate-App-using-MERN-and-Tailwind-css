@@ -2,18 +2,47 @@ import User from "../models/user.model.js";
 import bcryptjs from "bcryptjs";
 import { errorHanndle } from "../utils/error.js";
 import jwt from "jsonwebtoken";
+import crypto from "crypto";
+import nodemailer from "nodemailer";
+import sendEmail from "../utils/sendEmail.js";
+
 export const signup = async (req, res, next) => {
   const { username, email, password, isAdmin } = req.body;
-  const hashPassword = bcryptjs.hashSync(password, 10);
-  const newUser = new User({
-    username,
-    email,
-    password: hashPassword,
-    isAdmin: isAdmin || false,
-  });
+
   try {
+    const hashedPassword = bcryptjs.hashSync(password, 10);
+
+    // Generate verification token
+    const verificationToken = crypto.randomBytes(32).toString("hex");
+    const tokenExpires = Date.now() + 1000 * 60 * 60; // 1 hour
+
+    const newUser = new User({
+      username,
+      email,
+      password: hashedPassword,
+      isAdmin: isAdmin || false,
+      verificationToken,
+      verificationTokenExpires: tokenExpires,
+    });
+
     await newUser.save();
-    res.status(201).json({ message: "User registered successfully!" });
+
+    const verificationUrl = `http://localhost:5173/verify-email/${verificationToken}`;
+
+    await sendEmail({
+      to: email,
+      subject: "Verify your email",
+      html: `
+        <h2>Welcome, ${username}!</h2>s
+        <p>Click the link below to verify your email address:</p>
+        <a href="${verificationUrl}">${verificationUrl}</a>
+      `,
+    });
+
+    res.status(201).json({
+      message:
+        "User registered! Please check your email to verify your account.",
+    });
   } catch (error) {
     next(error);
   }
@@ -21,9 +50,16 @@ export const signup = async (req, res, next) => {
 
 export const signin = async (req, res, next) => {
   const { email, password } = req.body;
+
   try {
     const validUser = await User.findOne({ email });
     if (!validUser) return next(errorHanndle(400, "User not found"));
+
+    if (!validUser.emailVerified) {
+      return res
+        .status(401)
+        .json({ success: false, message: "Please verify your email." });
+    }
 
     const validPassword = bcryptjs.compareSync(password, validUser.password);
     if (!validPassword) return next(errorHanndle(401, "Wrong credentials"));
@@ -85,7 +121,7 @@ export const google = async (req, res, next) => {
 export const signOut = async (req, res, next) => {
   try {
     res.clearCookie("access_token");
-    res.status(200).json("user has been loged out! ");
+    res.status(200).json("User has been logged out!");
   } catch (error) {
     next(error);
   }
@@ -96,4 +132,26 @@ export const admin = (req, res) => {
     message: "Welcome Admin!",
     user: req.user,
   });
+};
+
+export const verifyEmail = async (req, res, next) => {
+  try {
+    const user = await User.findOne({
+      verificationToken: req.params.token,
+      verificationTokenExpires: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      return res.status(400).json({ message: "Invalid or expired token" });
+    }
+
+    user.emailVerified = true;
+    user.verificationToken = undefined;
+    user.verificationTokenExpires = undefined;
+    await user.save();
+
+    res.status(200).json({ message: "Email verified successfully" });
+  } catch (err) {
+    next(err);
+  }
 };
