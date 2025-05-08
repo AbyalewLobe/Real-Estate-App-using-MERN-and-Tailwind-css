@@ -27,7 +27,8 @@ export const signup = async (req, res, next) => {
 
     await newUser.save();
 
-    const verificationUrl = `http://localhost:5173/verify-email/${verificationToken}`;
+    // const verificationUrl = `http://localhost:5173/verify-email/${verificationToken}`;
+    const verificationUrl = `https://abyalew-real-estate-app.onrender.com/verify-email/${verificationToken}`;
 
     await sendEmail({
       to: email,
