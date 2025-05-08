@@ -58,9 +58,20 @@ export const updateListing = async (req, res, next) => {
 export const getListing = async (req, res, next) => {
   try {
     const listing = await Listing.findById(req.params.id);
-    if (!listing || listing.status !== "active") {
+    if (!listing) {
       return next(errorHanndle(404, "Listing not found!"));
     }
+
+    const isOwner = req.user && req.user.id === listing.userRef.toString();
+    const isAdmin = req.user && req.user.isAdmin;
+
+    // If listing is NOT active, only owner or admin can access
+    if (listing.status !== "active" && !isOwner && !isAdmin) {
+      return next(
+        errorHanndle(403, "You do not have permission to view this listing.")
+      );
+    }
+
     res.status(200).json(listing);
   } catch (error) {
     next(error);
