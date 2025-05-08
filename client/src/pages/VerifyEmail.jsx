@@ -12,7 +12,8 @@ const VerifyEmail = () => {
   useEffect(() => {
     const verify = async () => {
       try {
-        await axios.get(`http://localhost:3000/api/auth/verify-email/${token}`);
+        // await axios.get(`http://localhost:3000/api/auth/verify-email/${token}`);
+        await axios.get(`/api/auth/verify-email/${token}`);
         setStatus("success");
       } catch (err) {
         setStatus("error");
