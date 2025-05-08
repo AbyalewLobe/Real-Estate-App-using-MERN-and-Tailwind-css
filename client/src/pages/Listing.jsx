@@ -97,96 +97,99 @@ export default function Listing() {
               </SwiperSlide>
             ))}
           </Swiper>
-        </>
-      )}
-      <div className="bg-[#f9f8f8]  mx-auto p-6 mt-8 max-w-6xl text-start">
-        <h1 className="text-3xl font-semibold text-gray-800 ">
-          {listing?.name} {" - "}${" "}
-          {listing?.offer
-            ? +listing?.regularPrice - listing?.discountPrice
-            : listing?.regularPrice}
-          /month
-        </h1>
-        <p className="mt-3 text-md text-gray-600 ">
-          <FaMapMarkerAlt className="text-green-600 mr-2" />
-          {listing?.address}
-        </p>
 
-        <div className="mt-4 flex  gap-4">
-          {listing?.type === "rent" ? (
-            <p className="bg-red-600 text-white text-center px-4 py-2 rounded-md font-semibold">
-              For Rent
+          <div className="bg-[#f9f8f8]  mx-auto p-6 mt-8 max-w-6xl text-start">
+            <h1 className="text-3xl font-semibold text-gray-800 ">
+              {listing?.name} {" - "}${" "}
+              {listing?.offer
+                ? +listing?.regularPrice - listing?.discountPrice
+                : listing?.regularPrice}
+              /month
+            </h1>
+            <p className="mt-3 text-md text-gray-600 ">
+              <FaMapMarkerAlt className="text-green-600 mr-2" />
+              {listing?.address}
             </p>
-          ) : (
-            <div className="flex justify-center gap-2">
-              <p className="bg-red-600 text-white text-center px-4 py-2 rounded-md font-semibold">
-                For Sale
-              </p>
-              {listing?.offer && (
-                <p className="bg-green-600 text-white text-center px-4 py-2 rounded-md font-semibold">
-                  ${listing?.discountPrice} Discount
+
+            <div className="mt-4 flex  gap-4">
+              {listing?.type === "rent" ? (
+                <p className="bg-red-600 text-white text-center px-4 py-2 rounded-md font-semibold">
+                  For Rent
                 </p>
+              ) : (
+                <div className="flex justify-center gap-2">
+                  <p className="bg-red-600 text-white text-center px-4 py-2 rounded-md font-semibold">
+                    For Sale
+                  </p>
+                  {listing?.offer && (
+                    <p className="bg-green-600 text-white text-center px-4 py-2 rounded-md font-semibold">
+                      ${listing?.discountPrice} Discount
+                    </p>
+                  )}
+                </div>
               )}
             </div>
-          )}
-        </div>
 
-        <p className="mt-6 text-gray-700   mx-auto">
-          <span className="text-black font-semibold">Description - </span>
-          {listing?.description}
-        </p>
-        <div className="flex justify-between items-start flex-wrap gap-4">
-          <ul className="mt-6 flex text-green-700 font-semibold text-sm flex-wrap gap-6">
-            <li className="flex items-center gap-2">
-              <FaBed className="text-lg" />
-              <span className="bg-[#cce5e0] px-2 py-1 rounded">
-                {listing?.bedrooms > 1
-                  ? `${listing?.bedrooms} Beds`
-                  : `${listing?.bedrooms} Bed`}
-              </span>
-            </li>
-            <li className="flex items-center gap-2">
-              <FaBath className="text-lg" />
-              <span className="bg-[#cce5e0] px-2 py-1 rounded">
-                {listing?.bathrooms > 1
-                  ? `${listing?.bathrooms} Bathrooms`
-                  : `${listing?.bathrooms} Bathroom`}
-              </span>
-            </li>
-            <li className="flex items-center gap-2">
-              <FaParking className="text-lg" />
-              <span className="bg-[#cce5e0] px-2 py-1 rounded">
-                {listing?.parking ? "Parking" : "No Parking"}
-              </span>
-            </li>
-            <li className="flex items-center gap-2">
-              <FaChair className="text-lg" />
-              <span className="bg-[#cce5e0] px-2 py-1 rounded">
-                {listing?.furnished ? "Furnished" : "Not Furnished"}
-              </span>
-            </li>
-          </ul>
+            <p className="mt-6 text-gray-700   mx-auto">
+              <span className="text-black font-semibold">Description - </span>
+              {listing?.description}
+            </p>
+            <div className="flex justify-between items-start flex-wrap gap-4">
+              <ul className="mt-6 flex text-green-700 font-semibold text-sm flex-wrap gap-6">
+                <li className="flex items-center gap-2">
+                  <FaBed className="text-lg" />
+                  <span className="bg-[#cce5e0] px-2 py-1 rounded">
+                    {listing?.bedrooms > 1
+                      ? `${listing?.bedrooms} Beds`
+                      : `${listing?.bedrooms} Bed`}
+                  </span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <FaBath className="text-lg" />
+                  <span className="bg-[#cce5e0] px-2 py-1 rounded">
+                    {listing?.bathrooms > 1
+                      ? `${listing?.bathrooms} Bathrooms`
+                      : `${listing?.bathrooms} Bathroom`}
+                  </span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <FaParking className="text-lg" />
+                  <span className="bg-[#cce5e0] px-2 py-1 rounded">
+                    {listing?.parking ? "Parking" : "No Parking"}
+                  </span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <FaChair className="text-lg" />
+                  <span className="bg-[#cce5e0] px-2 py-1 rounded">
+                    {listing?.furnished ? "Furnished" : "Not Furnished"}
+                  </span>
+                </li>
+              </ul>
 
-          <div
-            className={`mt-6 px-4 py-1 rounded text-white font-bold text-sm uppercase tracking-wide
-      ${listing.status === "active" ? "bg-green-600" : ""}
-      ${listing.status === "pending" ? "bg-yellow-500" : ""}
-      ${listing.status === "archived" ? "bg-red-600" : ""}`}
-          >
-            {listing.status}
+              <div
+                className={`mt-6 px-3 py-1 rounded-lg text-white font-light text-sm items-center tracking-wide
+      ${listing.status === "active" ? "bg-green-400" : ""}
+      ${listing.status === "pending" ? "bg-yellow-400" : ""}
+      ${listing.status === "archived" ? "bg-red-400" : ""}`}
+              >
+                {listing.status}
+              </div>
+            </div>
+
+            {currentUser &&
+              listing?.userRef !== currentUser._id &&
+              !contact && (
+                <button
+                  onClick={() => setContact(true)}
+                  className="bg-[#2d3e50] text-white mt-8 w-full rounded-md py-3 text-lg font-semibold hover:bg-[#1c2c3a] transition"
+                >
+                  CONTACT LANDLORD
+                </button>
+              )}
+            {contact && <Contact listing={listing} />}
           </div>
-        </div>
-
-        {currentUser && listing?.userRef !== currentUser._id && !contact && (
-          <button
-            onClick={() => setContact(true)}
-            className="bg-[#2d3e50] text-white mt-8 w-full rounded-md py-3 text-lg font-semibold hover:bg-[#1c2c3a] transition"
-          >
-            CONTACT LANDLORD
-          </button>
-        )}
-        {contact && <Contact listing={listing} />}
-      </div>
+        </>
+      )}
     </main>
   );
 }
