@@ -132,37 +132,48 @@ export default function Listing() {
           <span className="text-black font-semibold">Description - </span>
           {listing?.description}
         </p>
+        <div className="flex justify-between items-start flex-wrap gap-4">
+          <ul className="mt-6 flex text-green-700 font-semibold text-sm flex-wrap gap-6">
+            <li className="flex items-center gap-2">
+              <FaBed className="text-lg" />
+              <span className="bg-[#cce5e0] px-2 py-1 rounded">
+                {listing?.bedrooms > 1
+                  ? `${listing?.bedrooms} Beds`
+                  : `${listing?.bedrooms} Bed`}
+              </span>
+            </li>
+            <li className="flex items-center gap-2">
+              <FaBath className="text-lg" />
+              <span className="bg-[#cce5e0] px-2 py-1 rounded">
+                {listing?.bathrooms > 1
+                  ? `${listing?.bathrooms} Bathrooms`
+                  : `${listing?.bathrooms} Bathroom`}
+              </span>
+            </li>
+            <li className="flex items-center gap-2">
+              <FaParking className="text-lg" />
+              <span className="bg-[#cce5e0] px-2 py-1 rounded">
+                {listing?.parking ? "Parking" : "No Parking"}
+              </span>
+            </li>
+            <li className="flex items-center gap-2">
+              <FaChair className="text-lg" />
+              <span className="bg-[#cce5e0] px-2 py-1 rounded">
+                {listing?.furnished ? "Furnished" : "Not Furnished"}
+              </span>
+            </li>
+          </ul>
 
-        <ul className="mt-6 flex  text-green-700 font-semibold text-sm flex-wrap gap-6">
-          <li className="flex items-center gap-2">
-            <FaBed className="text-lg" />
-            <span className="bg-[#cce5e0] px-2 py-1 rounded">
-              {listing?.bedrooms > 1
-                ? `${listing?.bedrooms} Beds`
-                : `${listing?.bedrooms} Bed`}
-            </span>
-          </li>
-          <li className="flex items-center gap-2">
-            <FaBath className="text-lg" />
-            <span className="bg-[#cce5e0] px-2 py-1 rounded">
-              {listing?.bathrooms > 1
-                ? `${listing?.bathrooms} Bathrooms`
-                : `${listing?.bathrooms} Bathroom`}
-            </span>
-          </li>
-          <li className="flex items-center gap-2">
-            <FaParking className="text-lg" />
-            <span className="bg-[#cce5e0] px-2 py-1 rounded">
-              {listing?.parking ? "Parking" : "No Parking"}
-            </span>
-          </li>
-          <li className="flex items-center gap-2">
-            <FaChair className="text-lg" />
-            <span className="bg-[#cce5e0] px-2 py-1 rounded">
-              {listing?.furnished ? "Furnished" : "Not Furnished"}
-            </span>
-          </li>
-        </ul>
+          <div
+            className={`mt-6 px-4 py-1 rounded text-white font-bold text-sm uppercase tracking-wide
+      ${listing.status === "active" ? "bg-green-600" : ""}
+      ${listing.status === "pending" ? "bg-yellow-500" : ""}
+      ${listing.status === "archived" ? "bg-red-600" : ""}`}
+          >
+            {listing.status}
+          </div>
+        </div>
+
         {currentUser && listing?.userRef !== currentUser._id && !contact && (
           <button
             onClick={() => setContact(true)}
