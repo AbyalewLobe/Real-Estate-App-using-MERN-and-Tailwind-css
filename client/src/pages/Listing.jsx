@@ -23,6 +23,7 @@ export default function Listing() {
   const params = useParams();
   const { currentUser } = useSelector((state) => state.user);
   const [contact, setContact] = useState(false);
+  console.log(listing);
   useEffect(() => {
     const fechListing = async () => {
       try {
@@ -35,7 +36,9 @@ export default function Listing() {
           setLoading(false);
           return;
         }
+
         setListing(data);
+
         setLoading(false);
         setError(false);
       } catch (error) {
